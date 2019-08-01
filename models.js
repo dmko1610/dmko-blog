@@ -1,9 +1,9 @@
-const Sequelize = require("sequelize");
+const Sequelize = require('sequelize');
 
-const db = new Sequelize({
-    dialect: "sqlite",
-    storage: "./database.sqlite"
-});
+const helpers = require('./helpers');
+
+// @ts-ignore
+const db = helpers.getDB();
 
 const Post = db.define("post", {
     title: { type: Sequelize.STRING },
