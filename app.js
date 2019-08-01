@@ -5,14 +5,11 @@ const logger = require('morgan');
 const okta = require("@okta/okta-sdk-nodejs");
 const session = require("express-session");
 const ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
+const auth = require("./auth");
 const blogRouter = require('./routes/blog');
 const usersRouter = require('./routes/users');
 
 const app = express();
-const client = new okta.Client({
-  orgUrl: "https://dev-366955.okta.com",
-  token: "004H3OHKdlgFEvr-T3wboGvQKLmRRgVUPDxjNVihzF"
-});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -31,10 +28,10 @@ const oidc = new ExpressOIDC({
   scope: "openid profile",
   routes: {
     login: {
-      path: "users/login"
+      path: "/users/login"
     },
     callback: {
-      path: "users/callback",
+      path: "/users/callback",
       defaultRedirect: "/dashboard"
     }
   }
@@ -50,10 +47,13 @@ app.use(oidc.router);
 
 app.use((req, res, next) => {
   if (!req.userinfo) return next();
-  client.getUser(req.userinfo.sub)
+
+  console.log(req.userinfo);
+
+  auth.client.getUser(req.userinfo.sub)
     .then(user => {
-      req.user = user;
-      req.locals.user = user;
+      req.user = user;      
+      res.locals.user = user;
       next();
     });
 });
@@ -72,7 +72,6 @@ app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  console.log("SOME SHIT HAPPENED");
   // render the error page
   res.status(err.status || 500);
   res.render('error');
