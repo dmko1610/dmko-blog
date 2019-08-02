@@ -24,12 +24,15 @@ const oidc = new ExpressOIDC({
   issuer: "https://dev-366955.okta.com/oauth2/default",
   client_id: "0oa11bo5mceLSqQ64357",
   client_secret: "nmmlxquGB99plV7suOoHLbWVG1Ng_SyoeXuDSTqZ",
-  redirect_uri: "https://dmko-blog.herokuapp.com/users/callback",
+  // redirect_uri: "https://dmko-blog.herokuapp.com/users/callback",
+  redirect_uri: "http://localhost:3000/users/callback",
+  appBaseUrl: "http://localhost:3000",
   scope: "openid profile",
   routes: {
     login: {
       path: "/users/login"
     },
+    // @ts-ignore
     callback: {
       path: "/users/callback",
       defaultRedirect: "/dashboard"

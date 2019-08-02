@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 
 
-// @ts-ignore   
 const db = new Sequelize({
     dialect: "sqlite",
     storage: "./database.sqlite"
